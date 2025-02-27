@@ -1,0 +1,60 @@
+name: Terraform Testing Framework
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  release:
+    types:
+      - published
+
+env:
+  AWS_REGION: us-east-1
+
+jobs:
+  terratests:
+    name: terratests
+    strategy:
+      fail-fast: false
+      matrix:
+        binary: ["tofu", "terraform"]
+        version: ["1.6", "1.7"]
+        experimental: [false]
+        include:
+          - version: "1.8"
+            binary: "terraform"
+            experimental: false
+          - version: "1.9"
+            binary: "terraform"
+            experimental: false
+
+    runs-on: comcast-ubuntu-latest
+    continue-on-error: ${{ matrix.experimental }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      ## Uncomment to use AWS. Make sure to add AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY to your repository secrets
+      # - name: Configure AWS Credentials
+      #   uses: aws-actions/configure-aws-credentials@v4
+      #   with:
+      #     aws-region: ${{ env.AWS_REGION }}
+      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v3
+        if: ${{ matrix.binary == 'terraform' }}
+        with:
+          terraform_version: ${{ matrix.version }}
+
+      - name: Install OpenTofu
+        uses: opentofu/setup-opentofu@v1
+        if: ${{ matrix.binary == 'tofu' }}
+        with:
+          tofu_version: ${{ matrix.version }}
+
+      - name: Run Tests
+        run: ${{matrix.binary}} test

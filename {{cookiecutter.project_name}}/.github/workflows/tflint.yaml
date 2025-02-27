@@ -1,0 +1,25 @@
+name: Terraform linting checks
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  release:
+    types:
+      - published
+
+jobs:
+  linting-tests:
+    name: linting-tests
+    runs-on: comcast-ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v4
+
+      - name: linting-tests
+        run: tflint --init && tflint

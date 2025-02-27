@@ -1,0 +1,13 @@
+# IaC root directory for Checkov scan
+directory:
+  - "."
+
+# Download external modules
+download-external-modules: true
+
+external-checks-dir:
+  - checkov_custom_checks
+
+# Skip specific Checkov checks here if they should be skipped in every usage, 
+# otherwise you can suppress an individual check for a specific resource: https://www.checkov.io/2.Basics/Suppressing%20and%20Skipping%20Policies.html
+skip-check:

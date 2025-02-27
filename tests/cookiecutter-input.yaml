@@ -1,0 +1,8 @@
+default_context:
+  project_name: "terraform-aws-test-cookiecutter"
+  minimum_terraform_version: "1.5"
+  provider_primary: "aws"
+  provider_vendor: "hashicorp"
+  provider_version: "5.20"
+  github_org: "comcast-terraform-community-modules"
+  publish_to_artifactory: "n"

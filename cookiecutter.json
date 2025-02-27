@@ -1,0 +1,13 @@
+{
+  "project_name": "",
+  "minimum_terraform_version": "1.5",
+  "provider_primary": "",
+  "provider_vendor": "hashicorp",
+  "provider_version": "",
+  "github_org": "",
+  "publish_to_artifactory": "n",
+  "github_code_owner_team": "",
+  "_copy_without_render": [
+    "*workflows"
+  ]
+}

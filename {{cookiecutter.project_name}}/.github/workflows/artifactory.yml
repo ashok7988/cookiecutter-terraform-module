@@ -1,0 +1,28 @@
+name: Upload Module to Artifactory Enterprise
+
+on:
+  release:
+  workflow_dispatch:
+
+env:
+  ARTIFACTORY_API_KEY: ${{ secrets.ARTIFACTORY_API_KEY }}
+
+jobs:
+  upload-artifact:
+    runs-on: comcast-ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Extract Release Version
+      shell: bash
+      run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      id: extract_branch
+
+    - name: Upload artifacts to Artifactory
+      run: |
+        export RELEASE_VERSION=${{ env.RELEASE_VERSION }}
+        zip -r module.zip . -x ".git/*" -x ".github/*"
+        echo "Uploading Module to Artifactory with build number: $RELEASE_VERSION"
+        curl -sSf -H "X-JFrog-Art-Api:$ARTIFACTORY_API_KEY" -X PUT -T "module.zip" "${{vars.ARTIFACTORY_URL}}/artifactory/${{vars.ARTIFACTORY_REPOSITORY}}/${{vars.ARTIFACTORY_MODULE_PATH}}/$RELEASE_VERSION.zip;released=true;build.number=$RELEASE_VERSION"

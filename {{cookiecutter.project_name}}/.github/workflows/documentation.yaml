@@ -1,0 +1,34 @@
+name: Terraform Documentation Checks
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  release:
+    types:
+      - published
+
+env:
+  terraform_docs_version: v0.18.0
+
+jobs:
+  documentation-tests:
+    name: documentation-tests
+    runs-on: comcast-ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform docs
+        run: |
+          mkdir terraform-docs
+          curl -sSLo ./terraform-docs.tar.gz https://github.com/terraform-docs/terraform-docs/releases/download/"${terraform_docs_version}"/terraform-docs-"$terraform_docs_version"-linux-amd64.tar.gz
+          tar -xzf terraform-docs.tar.gz -C terraform-docs
+          chmod +x terraform-docs/terraform-docs
+          sudo mv terraform-docs/terraform-docs /usr/local/bin/terraform-docs
+          rm -rf terraform-docs terraform-docs.tar.gz
+
+      - name: documentation-tests
+        run: terraform-docs . --output-check

@@ -1,0 +1,43 @@
+repos:
+-   repo: local
+    hooks:
+
+    -   id: docs
+        name: docs
+        description: Checks if README is up to date
+        entry: make documentation_test
+        language: system
+        always_run: true
+        pass_filenames: false     
+
+    -   id: validate
+        name: validate
+        description: Checks for syntax errors and configuration issues
+        entry: make validation
+        language: system
+        always_run: true
+        pass_filenames: false
+
+    -   id: format
+        name: format
+        description: Checks for adherence to standardized formatting guidelines
+        entry: make formatting_test
+        language: system
+        always_run: true
+        pass_filenames: false  
+
+    -   id: lint
+        name: lint
+        description: Checks for programmatic and stylistic errors that may not have been caught by validate or format
+        entry: make linting_test
+        language: system
+        always_run: true
+        pass_filenames: false
+
+    -   id: security
+        name: security
+        description: find and manage security issues in Infrastructure as Code files
+        entry: make security_test
+        language: system
+        always_run: true
+        pass_filenames: false

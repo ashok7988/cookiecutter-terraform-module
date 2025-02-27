@@ -1,0 +1,30 @@
+name: Formatting
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  release:
+    types:
+      - published
+
+jobs:
+  formatting:
+    strategy:
+      matrix:
+        binary: ["tofu", "terraform"]
+    runs-on: comcast-ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v3
+        if: ${{ matrix.binary == 'terraform' }}
+
+      - name: Install OpenTofu
+        uses: opentofu/setup-opentofu@v1
+        if: ${{ matrix.binary == 'tofu' }}
+
+      - name: Test Formatting
+        run: ${{matrix.binary}} fmt --check
